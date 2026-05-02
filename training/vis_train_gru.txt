@@ -1,0 +1,118 @@
+=== Citire date ===
+Total puncte: 5760
+Shape date: (5760, 5)
+
+=== Împărțire train/val/test ===
+Train: 4031
+Val:   865
+Test:  864
+
+=== Standardizare ===
+Mean: [ 1.1325939 12.234831  97.83289   49.77341   54.69947  ]
+Std:  [ 0.53997827  3.5771427  29.03089    11.010855    4.5478005 ]
+
+=== Construire ferestre ===
+X_train shape: (3992, 30, 5)
+y_train shape: (3992, 10, 5)
+
+=== Construire model GRU ===
+WARNING:tensorflow:From C:\Users\adeli\Documents\autoscaler-5g\venv\Lib\site-packages\keras\src\layers\rnn\gru.py:144: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2026-05-03 00:36:49.690095: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ gru (GRU)                   (None, 30, 64)            13632     
+                                                                 
+ gru_1 (GRU)                 (None, 64)                24960     
+                                                                 
+ dense (Dense)               (None, 50)                3250      
+                                                                 
+=================================================================
+Total params: 41842 (163.45 KB)
+Trainable params: 41842 (163.45 KB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________
+
+=== Antrenare ===
+Epoch 1/100
+WARNING:tensorflow:From C:\Users\adeli\Documents\autoscaler-5g\venv\Lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From C:\Users\adeli\Documents\autoscaler-5g\venv\Lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+63/63 [==============================] - 7s 41ms/step - loss: 0.2926 - mae: 0.4078 - val_loss: 0.1193 - val_mae: 0.2740
+Epoch 2/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1240 - mae: 0.2786 - val_loss: 0.1107 - val_mae: 0.2629
+Epoch 3/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1205 - mae: 0.2744 - val_loss: 0.1116 - val_mae: 0.2642
+Epoch 4/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1188 - mae: 0.2724 - val_loss: 0.1077 - val_mae: 0.2588
+Epoch 5/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1173 - mae: 0.2707 - val_loss: 0.1064 - val_mae: 0.2569
+Epoch 6/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1168 - mae: 0.2700 - val_loss: 0.1065 - val_mae: 0.2567
+Epoch 7/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1166 - mae: 0.2697 - val_loss: 0.1066 - val_mae: 0.2570
+Epoch 8/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1160 - mae: 0.2691 - val_loss: 0.1079 - val_mae: 0.2587
+Epoch 9/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1161 - mae: 0.2691 - val_loss: 0.1060 - val_mae: 0.2555
+Epoch 10/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1159 - mae: 0.2690 - val_loss: 0.1082 - val_mae: 0.2591
+Epoch 11/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1158 - mae: 0.2688 - val_loss: 0.1057 - val_mae: 0.2555
+Epoch 12/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1158 - mae: 0.2688 - val_loss: 0.1082 - val_mae: 0.2592
+Epoch 13/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1156 - mae: 0.2686 - val_loss: 0.1064 - val_mae: 0.2565
+Epoch 14/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1157 - mae: 0.2688 - val_loss: 0.1107 - val_mae: 0.2627
+Epoch 15/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1155 - mae: 0.2685 - val_loss: 0.1080 - val_mae: 0.2591
+Epoch 16/100
+63/63 [==============================] - 2s 27ms/step - loss: 0.1155 - mae: 0.2685 - val_loss: 0.1122 - val_mae: 0.2645
+Epoch 17/100
+63/63 [==============================] - 2s 28ms/step - loss: 0.1156 - mae: 0.2685 - val_loss: 0.1053 - val_mae: 0.2547
+Epoch 18/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1158 - mae: 0.2688 - val_loss: 0.1071 - val_mae: 0.2574
+Epoch 19/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1155 - mae: 0.2685 - val_loss: 0.1070 - val_mae: 0.2566
+Epoch 20/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1156 - mae: 0.2685 - val_loss: 0.1063 - val_mae: 0.2560
+Epoch 21/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1155 - mae: 0.2684 - val_loss: 0.1056 - val_mae: 0.2554
+Epoch 22/100
+63/63 [==============================] - 2s 27ms/step - loss: 0.1154 - mae: 0.2684 - val_loss: 0.1107 - val_mae: 0.2625
+Epoch 23/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1155 - mae: 0.2685 - val_loss: 0.1066 - val_mae: 0.2570
+Epoch 24/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1154 - mae: 0.2683 - val_loss: 0.1072 - val_mae: 0.2579
+Epoch 25/100
+63/63 [==============================] - 2s 25ms/step - loss: 0.1152 - mae: 0.2681 - val_loss: 0.1059 - val_mae: 0.2559
+Epoch 26/100
+63/63 [==============================] - 2s 26ms/step - loss: 0.1148 - mae: 0.2677 - val_loss: 0.1059 - val_mae: 0.2559
+Epoch 27/100
+61/63 [============================>.] - ETA: 0s - loss: 0.1149 - mae: 0.2679Restoring model weights from the end of the best epoch: 17.
+63/63 [==============================] - 2s 27ms/step - loss: 0.1150 - mae: 0.2679 - val_loss: 0.1086 - val_mae: 0.2594
+Epoch 27: early stopping
+
+=== Salvare model ===
+C:\Users\adeli\Documents\autoscaler-5g\venv\Lib\site-packages\keras\src\engine\training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
+Model salvat: training/models/gru_forecaster.h5
+
+=== Evaluare pe set de test ===
+Test MSE: 0.1089
+
+MAPE per feature:
+  ue_rate             : 13.63%
+  pdu_active          : 6.98%
+  throughput_mbps     : 8.16%
+  cpu_percent         : 6.08%
+  memory_percent      : 2.70%
+  AGGREGATE           : 7.51%
+
+=== Generare grafic ===
+Grafic salvat: training/models/training_history.png
