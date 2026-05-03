@@ -1,0 +1,181 @@
+# Configurație Open5GS pentru testbed licență
+# Bazată pe structura chart-urilor open5gs-amf, open5gs-smf etc. (versiunea 2.2.0)
+
+# MongoDB integrat
+mongodb:
+  enabled: true
+  auth:
+    enabled: false
+  image:
+    registry: docker.io
+    repository: bitnami/mongodb
+    tag: latest
+  persistence:
+    enabled: false
+
+# Populare DB cu UE-uri pentru testare (3 UE-uri)
+populate:
+  enabled: true
+  initCommands:
+    - open5gs-dbctl add_ue_with_apn 999700000000001 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet
+    - open5gs-dbctl add_ue_with_apn 999700000000002 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet
+    - open5gs-dbctl add_ue_with_apn 999700000000003 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet
+
+# ===== 5G CORE — NF-uri active =====
+
+amf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  metrics:
+    enabled: true
+  # Expunem AMF NGAP prin NodePort 30412 (pentru UERANSIM)
+  services:
+    ngap:
+      type: NodePort
+      nodePorts:
+        ngap: "30412"
+
+smf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  metrics:
+    enabled: true
+
+upf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  metrics:
+    enabled: true
+  # Expunem UPF GTP-U prin NodePort 30100 (pentru flux user-plane UERANSIM)
+  services:
+    gtpu:
+      type: NodePort
+      nodePorts:
+        gtpu: "30100"
+
+nrf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+  metrics:
+    enabled: true
+
+ausf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+udm:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+udr:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+bsf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+pcf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+webui:
+  enabled: false
+
+# ===== 5G — opționale, dezactivate =====
+nssf:
+  enabled: false
+scp:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+# ===== 4G/EPC — dezactivate complet =====
+hss:
+  enabled: false
+mme:
+  enabled: false
+pcrf:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
+sgwc:
+  enabled: false
+sgwu:
+  enabled: false
