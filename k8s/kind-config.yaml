@@ -1,0 +1,26 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: licenta-cluster
+nodes:
+- role: control-plane
+- role: worker
+  extraPortMappings:
+  - containerPort: 30412
+    hostPort: 30412
+    protocol: SCTP
+    listenAddress: "0.0.0.0"
+  - containerPort: 30100
+    hostPort: 30100
+    protocol: UDP
+    listenAddress: "0.0.0.0"
+  - containerPort: 30090
+    hostPort: 30090
+    protocol: TCP
+    listenAddress: "0.0.0.0"
+  - containerPort: 30030
+    hostPort: 30030
+    protocol: TCP
+    listenAddress: "0.0.0.0"
+networking:
+  apiServerAddress: "127.0.0.1"
+  apiServerPort: 6443
