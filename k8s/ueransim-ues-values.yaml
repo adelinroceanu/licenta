@@ -1,0 +1,55 @@
+# Configurație UE UERANSIM pentru testbed licență
+# IMSI: 999 + 70 + 0000000001 = 999700000000001 (există în DB)
+
+image:
+  registry: docker.io
+  repository: gradiant/ueransim
+  tag: "3.2.6"
+  pullPolicy: IfNotPresent
+
+# Pornim cu 1 UE pentru a confirma că funcționează; ulterior creștem la 3
+count: 1
+initialMSISDN: '0000000001'
+
+mcc: '999'
+mnc: '70'
+
+# Credențiale identice cu cele din DB (populate.initCommands)
+key: 465B5CE8B199B49FAA5F0A2EE238A6BC
+op: E8ED289DEBA952E4283B54E88E6183CA
+opType: OPC
+
+# Hostname gNB (chart-ul gNB se cheamă 'ueransim-gnb' implicit)
+gnb:
+  hostname: ueransim-gnb
+
+# Slice - DOAR sst, identic cu gNB
+sst: 1
+# sd: omis
+
+# APN-ul pentru sesiune PDU — trebuie să existe în DB UE-urilor
+# UE-urile din populate au APN 'internet'
+apnList:
+  - type: 'IPv4'
+    apn: 'internet'
+    slice:
+      sst: 1
+      sd: "0x111111"
+    emergency: false
+
+# Linux capabilities pentru raw sockets (UE virtual)
+podSecurityContext:
+  enabled: true
+containerSecurityContext:
+  enabled: true
+  capabilities:
+    add:
+      - NET_ADMIN
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "128Mi"
+    cpu: "200m"

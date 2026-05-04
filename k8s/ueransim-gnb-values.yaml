@@ -1,0 +1,32 @@
+# Configurație gNB UERANSIM pentru testbed licență
+# Aliniat cu Open5GS AMF (chart Gradiant 2.2.0)
+
+image:
+  registry: docker.io
+  repository: gradiant/ueransim
+  tag: "3.2.6"
+  pullPolicy: IfNotPresent
+
+# Hostname AMF (deja default-ul)
+amf:
+  hostname: open5gs-amf-ngap
+
+# PLMN — trebuie identic cu AMF Open5GS
+mcc: '999'
+mnc: '70'
+
+# Slice — DOAR sst, fără sd (AMF nu acceptă sd specificat)
+sst: 1
+# sd: omis intenționat
+
+# TAC — corespunde cu primul tac din AMF tai list ([1, 2, 3])
+tac: '0001'
+
+# Resources moderate pentru testbed
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "128Mi"
+    cpu: "200m"
