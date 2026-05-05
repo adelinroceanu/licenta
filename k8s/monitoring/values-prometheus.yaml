@@ -1,0 +1,120 @@
+# === Prometheus configuration ===
+prometheus:
+  prometheusSpec:
+    retention: 12h  # păstrează metrici 12 ore (economisește disk)
+    retentionSize: "2GB"  # max 2GB pe disk pentru TSDB
+    
+    # Resurse modeste — cluster-ul tău are doar 4GB liber
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+    
+    # Storage temporar (folosim emptyDir, nu PVC — kind nu are storage class default)
+    storageSpec: {}
+    
+    # IMPORTANT: scraping pod-uri din toate namespace-urile (inclusiv nf-stubs)
+    serviceMonitorSelector:
+      matchLabels:
+        prometheus: kube-prometheus
+    serviceMonitorNamespaceSelector: {}  # toate namespace-urile
+    
+    # Permitem scraping pe baza annotations (prometheus.io/scrape: "true")
+    additionalScrapeConfigs:
+      - job_name: 'kubernetes-pods-annotation'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: pod
+
+# === Grafana configuration ===
+grafana:
+  enabled: true
+  adminPassword: "admin123"  # parola admin pentru acces (schimb-o ulterior)
+  
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  
+  # NodePort pentru acces din browser
+  service:
+    type: NodePort
+    nodePort: 30030  # acces prin localhost:30030 (NodePort kind)
+  
+  # Dashboard-uri default importate automat
+  defaultDashboardsEnabled: true
+
+# === Alertmanager — dezactivat (nu avem nevoie pentru testbed) ===
+alertmanager:
+  enabled: false
+
+# === kube-state-metrics — activat (vrem să vedem replicile pod-urilor) ===
+kubeStateMetrics:
+  enabled: true
+
+# === node-exporter — activat (vrem CPU/RAM noduri) ===
+nodeExporter:
+  enabled: true
+
+# === Prometheus operator ===
+prometheusOperator:
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+# === Dezactivăm componente care nu ne trebuie ===
+defaultRules:
+  create: false  # rule-uri de alerta default
+
+# Reduc dimensiuni componente kube-system care nu ne trebuie pentru kind
+kubeApiServer:
+  enabled: false  # kind nu expune metrice api-server
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeEtcd:
+  enabled: false
+# === Kubelet config — fix pentru kind ===
+kubelet:
+  enabled: true
+  serviceMonitor:
+    cAdvisor: true
+    cAdvisorMetricRelabelings:
+      - sourceLabels: [__name__]
+        regex: container_(.*)
+        action: keep
+    https: true
+    insecureSkipVerify: true  # kind nu are cert valid
