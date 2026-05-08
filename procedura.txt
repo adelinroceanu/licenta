@@ -1,0 +1,23 @@
+# 1. Verifică Open5GS rulează (auto-start din systemd)
+sudo systemctl status open5gs-amfd open5gs-smfd open5gs-upfd | grep Active
+
+# 2. Restaurează NAT pentru tunelul 5G (NU se persistă după reboot)
+sudo sysctl -w net.ipv4.ip_forward=1
+sudo iptables -t nat -A POSTROUTING -s 10.45.0.0/16 -o wlp4s0 -j MASQUERADE
+sudo iptables -A FORWARD -i ogstun -o wlp4s0 -j ACCEPT
+sudo iptables -A FORWARD -i wlp4s0 -o ogstun -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# 3. Pornește port-forward-uri (în background)
+kubectl port-forward -n nf-stubs svc/amf-stub 18080:8080 > /dev/null 2>&1 &
+kubectl port-forward -n nf-stubs svc/smf-stub 18081:8080 > /dev/null 2>&1 &
+kubectl port-forward -n nf-stubs svc/upf-stub 18082:8080 > /dev/null 2>&1 &
+
+# 4. Pornește conector (în terminal dedicat)
+python3 ~/licenta/connector/connector.py &
+
+# 5. Pornește gNB (în terminal dedicat)
+cd ~/UERANSIM
+./build/nr-gnb -c config-licenta/gnb.yaml
+
+# 6. Pornește UE (în terminal dedicat)
+sudo ./build/nr-ue -c config-licenta/ue.yaml

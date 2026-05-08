@@ -10,6 +10,7 @@ import time
 import math
 import threading
 import logging
+import resource
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 
@@ -126,10 +127,28 @@ class StubHandler(BaseHTTPRequestHandler):
             total_req = state["total_requests"]
             total_fail = state["total_failures"]
         
-        # Construiește output în funcție de NF_TYPE
-        # Imită numele metricilor Open5GS reale
+        # === CPU și Memory metrici proprii ===
+        # ru_utime + ru_stime = total CPU time consumed (seconds)
+        ru = resource.getrusage(resource.RUSAGE_SELF)
+        cpu_user_seconds = ru.ru_utime
+        cpu_sys_seconds = ru.ru_stime
+        cpu_total_seconds = cpu_user_seconds + cpu_sys_seconds
+        # ru_maxrss e în KB pe Linux
+        memory_bytes = ru.ru_maxrss * 1024
+        
         metrics = []
         
+        # Common metrici (toate stub-urile)
+        metrics.append("# HELP nfstub_cpu_seconds_total Total CPU time consumed (user + system)")
+        metrics.append("# TYPE nfstub_cpu_seconds_total counter")
+        metrics.append(f'nfstub_cpu_seconds_total{{nf_type="{NF_TYPE}",mode="user"}} {cpu_user_seconds}')
+        metrics.append(f'nfstub_cpu_seconds_total{{nf_type="{NF_TYPE}",mode="system"}} {cpu_sys_seconds}')
+        metrics.append("# HELP nfstub_memory_bytes Resident set size memory in bytes")
+        metrics.append("# TYPE nfstub_memory_bytes gauge")
+        metrics.append(f'nfstub_memory_bytes{{nf_type="{NF_TYPE}"}} {memory_bytes}')
+        
+        # Construiește output în funcție de NF_TYPE
+        # Imită numele metricilor Open5GS reale
         if NF_TYPE == "amf":
             metrics.append("# HELP nfstub_amf_load_level Current load level (0-10)")
             metrics.append("# TYPE nfstub_amf_load_level gauge")
@@ -172,7 +191,6 @@ class StubHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
-
 
 def main():
     logger.info(f"Starting NF stub: type={NF_TYPE}, port={PORT}")

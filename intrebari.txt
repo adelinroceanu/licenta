@@ -1,0 +1,1 @@
+diferenta dintre systctl si systemctl
