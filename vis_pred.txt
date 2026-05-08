@@ -1,0 +1,6 @@
+=== Statistici finale ===
+  ue_rate             : MAPE=13.71%  RMSE=0.157
+  pdu_active          : MAPE= 6.96%  RMSE=1.011
+  throughput_mbps     : MAPE= 8.13%  RMSE=9.416
+  cpu_percent         : MAPE= 6.08%  RMSE=3.685
+  memory_percent      : MAPE= 2.70%  RMSE=1.837

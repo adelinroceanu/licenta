@@ -1,0 +1,58 @@
+(venv) PS C:\Users\adeli\Documents\autoscaler-5g> python training/train_rf.py
+=== Citire date ===
+Total ferestre: 720
+Features: ['req_rate', 'unique_sources', 'ip_entropy', 'reg_ratio', 'pdu_setup_ratio', 'pdu_release_ratio', 'mean_session_duration']
+Distribuție clase: legitim=480, atac=240
+
+=== Împărțire train/test (80/20) ===
+Train: 576, Test: 144
+
+=== 5-fold cross-validation ===
+CV F1-score: 0.961 ± 0.019
+CV scores per fold: [0.98701299 0.93333333 0.96202532 0.94736842 0.97435897]
+
+=== Antrenare model final ===
+Antrenare completă.
+
+=== Evaluare pe set de test ===
+
+Acuratețe: 0.965
+Precizie:  0.978
+Recall:    0.917
+F1-score:  0.946
+
+Matrice de confuzie:
+             Pred Legitim  Pred Atac
+Real Legitim       95          1
+Real Atac           4         44
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     Legitim       0.96      0.99      0.97        96
+        Atac       0.98      0.92      0.95        48
+
+    accuracy                           0.97       144
+   macro avg       0.97      0.95      0.96       144
+weighted avg       0.97      0.97      0.96       144
+
+
+=== Importanța features (Gini) ===
+  ip_entropy               : 0.291
+  unique_sources           : 0.291
+  req_rate                 : 0.190
+  reg_ratio                : 0.131
+  pdu_release_ratio        : 0.055
+  pdu_setup_ratio          : 0.027
+  mean_session_duration    : 0.015
+
+=== Timpul de inferență ===
+Inferență per fereastră: 23.300 ms
+
+=== Salvare model ===
+Model salvat: training/models/rf_detector.pkl
+
+=== Generare grafice ===
+Grafic salvat: training/models/rf_evaluation.png
+
+=== TERMINAT ===

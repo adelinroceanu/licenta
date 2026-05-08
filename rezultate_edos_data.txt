@@ -1,0 +1,29 @@
+(venv) PS C:\Users\adeli\Documents\autoscaler-5g> python training/generate_edos_data.py
+=== Generare ferestre de trafic legitim ===
+Generate 480 ferestre legitime
+
+=== Generare ferestre de atac EDoS ===
+Generate 240 ferestre atacator
+
+=== Dataset salvat ===
+Total ferestre: 720
+Distribuție clase: legitim=480, atac=240
+Raport: 66.7% legitim / 33.3% atac
+
+Statistici per clasă:
+label                                0           1
+req_rate              mean    1.811319    3.838472
+                      std     0.879343    0.605405
+unique_sources        mean   41.785417   83.887500
+                      std    15.635254   11.051792
+ip_entropy            mean    5.188903    6.247615
+                      std     0.524136    0.193320
+reg_ratio             mean    0.300025    0.418237
+                      std     0.067383    0.051958
+pdu_setup_ratio       mean    0.352394    0.299725
+                      std     0.072843    0.045021
+pdu_release_ratio     mean    0.299459    0.233647
+                      std     0.070879    0.044641
+mean_session_duration mean  120.922510  119.677163
+                      std    36.782843   24.225494
+(venv) PS C:\Users\adeli\Documents\autoscaler-5g> 
